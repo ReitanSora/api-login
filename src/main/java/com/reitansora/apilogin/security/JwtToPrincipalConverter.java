@@ -14,6 +14,7 @@ public class JwtToPrincipalConverter {
                 .username(decodedJWT.getClaim("nickname").asString())
                 .email(decodedJWT.getClaim("email").asString())
                 .createdAt(decodedJWT.getClaim("createdAt").asString())
+                .role(decodedJWT.getClaim("role").asString())
                 .build();
     }
 

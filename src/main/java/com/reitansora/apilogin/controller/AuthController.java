@@ -17,12 +17,13 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
+@RequestMapping("/auth")
 public class AuthController {
 
     private final JWTIssuer jwtIssuer;
     private final AuthenticationManager authenticationManager;
 
-    @PostMapping("/auth/login")
+    @PostMapping("/login")
     public LoginResponse login(@RequestBody @Validated LoginRequest loginRequest){
         var authentication = authenticationManager.authenticate(
                 new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword())
@@ -34,7 +35,7 @@ public class AuthController {
                 .map(GrantedAuthority::getAuthority)
                 .toList();
 
-        var token = jwtIssuer.issue(principal.getEncryptedUserId(), principal.getUsername(), principal.getEmail(), principal.getCreatedAt());
+        var token = jwtIssuer.issue(principal.getEncryptedUserId(), principal.getUsername(), principal.getEmail(), principal.getCreatedAt(), principal.getRole());
         return LoginResponse.builder()
                 .accessToken(token)
                 .build();
@@ -48,6 +49,7 @@ public class AuthController {
                 .email(userPrincipal.getEmail())
                 .password("")
                 .createdAt(userPrincipal.getCreatedAt())
+                .role(userPrincipal.getRole())
                 .build();
     }
 }

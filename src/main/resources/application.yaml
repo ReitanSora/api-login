@@ -14,7 +14,7 @@ spring:
     properties:
       .hibernate.dialect: org.hibernate.dialect.PostgreSQLDialect
       hibernate:
-        default_schema: capiplan
+        default_schema: raidendrive
 
 
 

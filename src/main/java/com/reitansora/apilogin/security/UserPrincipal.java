@@ -18,6 +18,8 @@ public class UserPrincipal implements UserDetails {
     private final String email;
     private final String password;
     private final String createdAt;
+    private final String updatedAt;
+    private final String role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -12,13 +12,13 @@ import java.util.Optional;
 public interface UserRepository extends JpaRepository<UserEntity, Long> {
 
     @Query(
-            value = "SELECT * FROM capiplan.select_by_email(request_email := :email) ",
+            value = "SELECT * FROM raidendrive.select_by_email(request_email := :email) ",
             nativeQuery = true
     )
     Optional<UserEntity> findByEmail(@Param("email") String email);
 
     @Query(
-            value = "SELECT * FROM capiplan.select_by_id(request_id := :id) ",
+            value = "SELECT * FROM raidendrive.select_by_id(request_id := :id) ",
             nativeQuery = true
     )
     Optional<Long> findBy_id(@Param("id") String id);

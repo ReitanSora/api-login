@@ -13,4 +13,5 @@ public class UserResponse {
     private final String email;
     private final String password;
     private final String createdAt;
+    private final String role;
 }

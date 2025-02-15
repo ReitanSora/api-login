@@ -16,6 +16,7 @@ public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @Column
     private String user_id;
     @Column
     private String user_nickname;
@@ -25,10 +26,13 @@ public class UserEntity {
     private String user_password;
     @Column(updatable = false, nullable = false)
     private Instant created_at;
+    @Column
+    private String user_role;
 
     @PrePersist
     protected void onCreate() {
         created_at = Instant.now();
+        user_role = "client";
     }
 
 }
