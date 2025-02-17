@@ -21,6 +21,9 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 import java.util.List;
 
+/**
+ * Configuration class for web security settings.
+ */
 @Configuration
 @EnableWebSecurity
 @RequiredArgsConstructor
@@ -29,30 +32,42 @@ public class WebSecurityConfig {
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final CustomUserDetailService customUserDetailService;
 
+    /**
+     * Configures the security filter chain.
+     *
+     * @param http the HttpSecurity to modify
+     * @return the configured SecurityFilterChain
+     * @throws Exception if an error occurs
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
-                .cors(Customizer.withDefaults())
+            .cors(Customizer.withDefaults())
 //                .cors(cors -> cors.configurationSource(corsConfigurationSource()))
-                .csrf(AbstractHttpConfigurer::disable)
-                .sessionManagement(httpSecuritySessionManagementConfigurer ->
-                        httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                )
+            .csrf(AbstractHttpConfigurer::disable)
+            .sessionManagement(httpSecuritySessionManagementConfigurer ->
+                httpSecuritySessionManagementConfigurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
+            )
 //                .securityMatcher("/**")
-                .authorizeHttpRequests(registry -> registry
-                    .requestMatchers("/").permitAll()
-                    .requestMatchers("/user/find").permitAll()
-                    .requestMatchers("/user/isEmailUsed").permitAll()
-                    .requestMatchers("/user/create").permitAll()
-                    .requestMatchers("/auth/login").permitAll()
-                    .anyRequest().authenticated()
-                ).formLogin(AbstractHttpConfigurer::disable);
+            .authorizeHttpRequests(registry -> registry
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/user/find").permitAll()
+                .requestMatchers("/user/isEmailUsed").permitAll()
+                .requestMatchers("/user/create").permitAll()
+                .requestMatchers("/auth/login").permitAll()
+                .anyRequest().authenticated()
+            ).formLogin(AbstractHttpConfigurer::disable);
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return http.build();
     }
 
+    /**
+     * Configures CORS settings.
+     *
+     * @return the configured CorsConfigurationSource
+     */
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
@@ -66,17 +81,29 @@ public class WebSecurityConfig {
         return source;
     }
 
+    /**
+     * Configures the password encoder.
+     *
+     * @return the password encoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * Configures the authentication manager.
+     *
+     * @param http the HttpSecurity to modify
+     * @return the configured AuthenticationManager
+     * @throws Exception if an error occurs
+     */
     @Bean
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         var builder = http.getSharedObject(AuthenticationManagerBuilder.class);
         builder
-                .userDetailsService(customUserDetailService)
-                .passwordEncoder(passwordEncoder());
+            .userDetailsService(customUserDetailService)
+            .passwordEncoder(passwordEncoder());
         return builder.build();
     }
 }
